@@ -1,31 +1,28 @@
-"""djangoproject URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.urls import path
 from rest_framework import routers
+from rest_framework_nested.routers import NestedSimpleRouter
+
 from . import views
 
-from blog.api.views import BlogView
 
-app_name = "BLOG"
+app_name = "blog"
 
 router = routers.DefaultRouter()
-router.register(r'users', BlogView)
+router.register(prefix='posts', viewset=views.PostView, basename='post')
 
-urlpatterns = [
-    path('', views.post_list, name='post_list'),
+post_router = NestedSimpleRouter(parent_router=router, parent_prefix='posts', lookup='post')
+post_router.register(prefix='comments', viewset=views.CommentPostView, basename='comment')
 
-]
-urlpatterns+= router.urls
+likes_post_router = NestedSimpleRouter(parent_router=router, parent_prefix='posts', lookup='post')
+likes_post_router.register(prefix='likes', viewset=views.LikesPostView, basename='likes')
+
+comment_router = NestedSimpleRouter(parent_router=post_router, parent_prefix='comments', lookup='comment')
+comment_router.register(prefix='likes', viewset=views.LikesCommentView, basename='likes')
+
+urlpatterns = router.urls
+urlpatterns += post_router.urls
+urlpatterns += likes_post_router.urls
+urlpatterns += comment_router.urls
+
+
+
+__all__ = ('app_name', 'urlpatterns')
