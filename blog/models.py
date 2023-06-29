@@ -16,3 +16,25 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class CommentPost(models.Model):
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='comments')
+    username = models.CharField(verbose_name='Логин', max_length=32)
+    text = models.CharField(verbose_name='Текст', max_length=256)
+
+    def __str__(self):
+        return self.username+": "+self.text
+
+
+class LikePost(models.Model):
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='likes_post')
+    username = models.CharField(verbose_name='Логин', max_length=32)
+
+
+class LikeComment(models.Model):
+    comment = models.ForeignKey(to=CommentPost, on_delete=models.CASCADE, related_name='likes_comment')
+    username = models.CharField(verbose_name='Логин', max_length=32)
+
+
+__all__ = ('Post', 'CommentPost', 'LikePost', 'LikeComment', )
