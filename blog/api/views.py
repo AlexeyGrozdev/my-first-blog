@@ -1,3 +1,6 @@
+from random import randint, choice
+from string import ascii_letters
+
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import status
@@ -46,19 +49,28 @@ class PostView(ModelViewSet):
     serializer_class = serializers.PostSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(published_date__lte=timezone.now()).order_by('published_date')
+        return super().get_queryset().filter()
 
-    @action(methods=('get',), detail=False, url_path='post-list')
+    @action(methods=('get',), detail=False, url_path='list')
     def post_list(self, *args, **kwargs):
-        posts = self.get_queryset()
+        posts = self.get_queryset().filter(published_date__lte=timezone.now()).order_by('published_date')
         return render(self.request, 'blog/post_list.html', {'posts': posts})
 
-    '''
-    Снять пост с публикации
-    @action(methods=('get',), detail=False, url_path='post-list')
-    def post_list(self, *args, **kwargs):
-    '''
+    @action(methods=('put','get'), detail=True, url_path='unpublish')
+    def unpublish(self, *args, **kwargs):
+        post = self.get_queryset().filter().first()
+        published_date=None;
+        post.published_date=published_date
+        post.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
 
+    @action(methods=('put','get'), detail=True, url_path='republish')
+    def republish(self, *args, **kwargs):
+        post = self.get_queryset().filter(id=self.kwargs['pk']).first()
+        published_date=timezone.now()
+        post.published_date=published_date
+        post.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 class CommentPostView(ModelViewSet):
     queryset = models.CommentPost.objects
@@ -67,38 +79,30 @@ class CommentPostView(ModelViewSet):
     def get_queryset(self):
         return super().get_queryset().filter(post_id=self.kwargs['post_pk'])
 
-    @action(methods=['GET', ], detail=False, url_path='comments-list')
+    @action(methods=['GET', ], detail=False, url_path='list')
     def comments_list(self, *args, **kwargs):
         comments = self.get_queryset()
         return render(self.request, 'blog/view-some-data.html', {'data': comments})
 
-    @action(methods=('delete', 'get'), detail=False, url_path='clear-comments')
+    @action(methods=('delete', 'get'), detail=False, url_path='clear')
     def clear_comments(self, *args, **kwargs):
         comments = self.get_queryset()
         comments.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    #!!!!!сгенерировать 1 коммент, чтобы понять post
-    @action(methods=('post','get'), detail=False, url_path='')
-    def generate(self, *args, **kwargs):
-        post = self.kwargs['post_pk']
-        username = 'admin'
-        text = 'sample text'
-        return
-
-    '''
-    !!!!!!!Сгенерировать комменты
-    
-    @action(methods=('put', 'get'), detail=False, url_path='generate-comments')
+    @action(methods=('post', 'get'), detail=False, url_path='generate')
     def generate_comments(self, *args, **kwargs):
-        comments = self.get_queryset()
-    
-    '''
-
-    #!!!! снять пост с публикации
-    @action(methods=(), detail=False, url_path='')
-    def unpublish(self, *args, **kwargs):
-        pass
+        post = models.Post.objects.filter(pk=self.kwargs['post_pk']).first()
+        comments = []
+        for _ in range(30):
+            username = ""
+            text = ""
+            for _ in range(randint(6, 18)):
+                username += choice(ascii_letters)
+            for _ in range(randint(18, 54)):
+                text += choice(ascii_letters)
+            comments += [str(models.CommentPost.objects.create(post=post, username=username, text=text))]
+        return Response(data={'comments': comments})
 
 
 class LikesPostView(ModelViewSet):
@@ -129,4 +133,4 @@ class LikesCommentView(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-__all__ = ('PostView', 'CommentPostView', 'LikesPostView', 'LikesCommentView', )
+__all__ = ('PostView', 'CommentPostView', 'LikesPostView', 'LikesCommentView',)
