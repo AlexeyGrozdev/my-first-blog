@@ -8,8 +8,9 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
-from project.blog import models
+
 from . import serializers
+from .. import models
 
 # view = запросы со стороны пользователя
 

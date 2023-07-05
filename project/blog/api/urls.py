@@ -3,7 +3,6 @@ from rest_framework_nested.routers import NestedSimpleRouter
 
 from . import views
 
-
 app_name = "blog"
 
 router = routers.DefaultRouter()
