@@ -1,6 +1,5 @@
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
-from django.urls import path
 
 from . import views
 

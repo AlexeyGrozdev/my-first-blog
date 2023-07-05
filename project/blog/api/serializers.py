@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blog import models
+from project.blog import models
 
 
 class PostSerializer(serializers.ModelSerializer):
