@@ -1,6 +1,6 @@
 <template>
   <p>
-    404 SORRY COULDN'T FIND IT!!!
+    404 Дружок пирожок, ты ошибся дверью. Рабочая ссылка двумя блоками ниже.
   </p>
 </template>
 <script>

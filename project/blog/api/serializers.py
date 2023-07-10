@@ -17,7 +17,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_comment_list(instance):
-        return [x.text for x in instance.comments.all()]
+        return [str(x) for x in instance.comments.all()]
 
     @staticmethod
     def get_comment_count(instance) -> int:
@@ -30,6 +30,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 class CommentPostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
+
     class Meta:
         model = models.CommentPost
         fields = '__all__'

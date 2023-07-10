@@ -17,7 +17,7 @@ likes_post_router.register(prefix='likes', viewset=views.LikesPostView, basename
 comment_router = NestedSimpleRouter(parent_router=post_router, parent_prefix='comments', lookup='comment')
 comment_router.register(prefix='likes', viewset=views.LikesCommentView, basename='likes')
 
-urlpatterns =[
+urlpatterns = [
 
 ]
 
@@ -26,6 +26,4 @@ urlpatterns += post_router.urls
 urlpatterns += likes_post_router.urls
 urlpatterns += comment_router.urls
 
-
-__all__ = ('app_name', 'urlpatterns', )
-
+__all__ = ('app_name', 'urlpatterns',)

@@ -1,7 +1,7 @@
 # Roadmap практики:
 
 ## Важно знать
-PEP8, импорты, нейминги, тайпинги
+PEP8, импорты, нейминги, тайпинги, ESLint
 
 ## Процесс работы
 1. Установка: python 3.11, pip, pycharm community edition, venv; через requirements: django, rest framework, drf-nested-routers
@@ -20,4 +20,6 @@ PEP8, импорты, нейминги, тайпинги
 11. Создаём nested модели commentPost, LikePost, LikeComment. Создаём для каждого свои url, serializer и view; мигрируем.
 12. Учимся объединять миграции: Откатываемся (migrate) до zero, удаляем все миграции, создаём новую 
 13. Создаём точки доступа во view: actions на get (post lists), post (generate comment), put (publish post), delete (clear comments)
-14. 
+14. Подготавливаем frontend, устанавливаем vue - <npm install -g vue-cli>, создаём шаблон с помощью <vue init webpack frontend>
+15. Настраиваем компоненты, роутеры, проект.
+16. Подготавливаем проект для отсылки запросов с фронта на бэкенд

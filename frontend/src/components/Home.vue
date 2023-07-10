@@ -1,11 +1,20 @@
 <template>
   <p class="homeText">
-    WELCOME TO ACCOUNT-OWNER APPLICATION
+    Добро пожаловать в блог Лёхи
   </p>
 </template>
 <script>
+import BlogService from '@/api-services/blog.service';
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  created() {
+    BlogService.getAll().then((response) => {
+      console.log(response.data);
+    }).catch((error) => {
+      console.log(error.response.data);
+    });
+  }
 };
 </script>
 <style scoped>.homeText{
